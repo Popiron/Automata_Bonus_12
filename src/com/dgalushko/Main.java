@@ -1,9 +1,16 @@
 package com.dgalushko;
 
+import java.util.Scanner;
+
 public class Main {
 
     public static void main(String[] args) {
-	Helpers.processData("S->S+T|S-T|T T->T*E|T/E|E E->(s)|a|b");
-	Grammar.DeleteCircleRules();
+            System.out.println("Укажите путь к текстовому файлу!");
+            Scanner in = new Scanner(System.in);
+            var path = in.nextLine();
+            var data = Helpers.openFileAndReadData(path);
+            Helpers.processData(data);
+            Grammar.DeleteCircleRules();
+            Grammar.printResults();
     }
 }

@@ -3,11 +3,9 @@ package com.dgalushko;
 import java.util.*;
 
 public class Grammar {
-    //static String grammarSign;
-    static ArrayList<String> norTerminals = new ArrayList<>();
-    static ArrayList<String> signature = new ArrayList<>();
+    static ArrayList<String> nonTerminals = new ArrayList<>();
+    static ArrayList<String> terminals = new ArrayList<>();
     static HashMap<String,ArrayList<String>> production = new HashMap<>();
-   // static String startingSign;
 
     private static HashMap<String,ArrayList<String>> t_production = new HashMap<>();
 
@@ -17,25 +15,63 @@ public class Grammar {
         {
             for (var e :p.getValue())
             {
-                if (norTerminals.contains(e))
+                if (nonTerminals.contains(e))
                 {
                     t_production.get(p.getKey()).remove(e);
-                    f(p.getKey(),e);
+                    removeChains(p.getKey(),e);
                 }
             }
         }
     }
 
-    private static void f(String mainKey,String addKey)
+    private static void removeChains(String mainKey, String addKey)
     {
         for (var e: t_production.get(addKey)) {
-            if (norTerminals.contains(e))
+            if (nonTerminals.contains(e))
             {
-                f(mainKey,e);
+                removeChains(mainKey,e);
             } else
             {
                 t_production.get(mainKey).add(e);
             }
         }
     }
+
+    public static void printResults()
+    {
+        System.out.println("Перед применением алгоритма:");
+        for (var p: production.entrySet())
+        {
+            System.out.print(p.getKey()+"->");
+            StringBuilder s = new StringBuilder();
+            for (var e :p.getValue())
+            {
+                s.append(e).append('|');
+            }
+            if (s.toString().endsWith("|")) {
+                s.deleteCharAt(s.length() - 1);
+            }
+            s.append(" ");
+            System.out.print(s);
+        }
+
+        System.out.println();
+
+        System.out.println("Результат применения алгоритма:");
+        for (var p: t_production.entrySet())
+        {
+            System.out.print(p.getKey()+"->");
+            StringBuilder s = new StringBuilder();
+            for (var e :p.getValue())
+            {
+                s.append(e).append('|');
+            }
+            if (s.toString().endsWith("|")) {
+                s.deleteCharAt(s.length() - 1);
+            }
+            s.append(" ");
+            System.out.print(s);
+        }
+    }
+
 }
